@@ -3,26 +3,26 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/FirstFragment">
+    app:startDestination="@id/IsbnList">
 
     <fragment
-        android:id="@+id/FirstFragment"
+        android:id="@+id/IsbnList"
         android:name="com.example.isbngacha.FirstFragment"
-        android:label="@string/first_fragment_label"
-        tools:layout="@layout/fragment_first">
+        android:label="@string/isbn_list_fragment_label"
+        tools:layout="@layout/fragment_isbn_list">
 
         <action
             android:id="@+id/action_FirstFragment_to_SecondFragment"
-            app:destination="@id/SecondFragment" />
+            app:destination="@id/BookDetail" />
     </fragment>
     <fragment
-        android:id="@+id/SecondFragment"
+        android:id="@+id/BookDetail"
         android:name="com.example.isbngacha.SecondFragment"
-        android:label="@string/second_fragment_label"
-        tools:layout="@layout/fragment_second">
+        android:label="@string/book_detail_fragment_label"
+        tools:layout="@layout/fragment_book_detail">
 
         <action
             android:id="@+id/action_SecondFragment_to_FirstFragment"
-            app:destination="@id/FirstFragment" />
+            app:destination="@id/IsbnList" />
     </fragment>
 </navigation>
