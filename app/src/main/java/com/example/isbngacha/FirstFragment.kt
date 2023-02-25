@@ -1,17 +1,19 @@
 package com.example.isbngacha
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.navigation.fragment.findNavController
 import com.example.isbngacha.databinding.FragmentIsbnListBinding
 
 /**
  * A simple [Fragment] subclass as the default destination in the navigation.
  */
 class FirstFragment : Fragment() {
+
+    private val TAG = "FirstFragment"
 
     private var _binding: FragmentIsbnListBinding? = null
 
@@ -33,7 +35,9 @@ class FirstFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         binding.isbnGeneratorButton.setOnClickListener {
-            findNavController().navigate(R.id.action_FirstFragment_to_SecondFragment)
+            val isbnGenerator: IsbnGenerator = RandomIsbnGenerator()
+            val isbn = isbnGenerator.generate()
+            Log.d(TAG, "ISBN generated: $isbn")
         }
     }
 
