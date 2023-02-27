@@ -51,10 +51,9 @@ class FirstFragment : Fragment() {
         adapter.setOnClickListener {
             // RecyclerView 内の TextView から ISBN を取得
             val isbn = it.findViewById<TextView>(R.id.itemIsbnTextView).text.toString()
-            val book = Book(isbn)
 
             // データを渡しつつ画面遷移
-            val action = FirstFragmentDirections.actionFirstFragmentToSecondFragment(book)
+            val action = FirstFragmentDirections.actionFirstFragmentToSecondFragment(isbn)
             it.findNavController().navigate(action)
         }
         binding.recyclerView.adapter = adapter

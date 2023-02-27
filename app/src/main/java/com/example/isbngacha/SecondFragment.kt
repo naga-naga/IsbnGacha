@@ -35,8 +35,8 @@ class SecondFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         // データを受け取る
-        val book = SecondFragmentArgs.fromBundle(requireArguments()).book
-        Log.d(TAG, book.toString())
+        val isbn = SecondFragmentArgs.fromBundle(requireArguments()).isbn
+        Log.d(TAG, "received: $isbn")
     }
 
     override fun onDestroyView() {

@@ -25,7 +25,7 @@
             android:id="@+id/action_SecondFragment_to_FirstFragment"
             app:destination="@id/IsbnList" />
         <argument
-            android:name="book"
-            app:argType="com.example.isbngacha.Book" />
+            android:name="isbn"
+            app:argType="string" />
     </fragment>
 </navigation>
