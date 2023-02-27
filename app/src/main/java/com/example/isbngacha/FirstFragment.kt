@@ -5,7 +5,9 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
 import androidx.fragment.app.Fragment
+import androidx.navigation.findNavController
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.isbngacha.databinding.FragmentIsbnListBinding
@@ -46,6 +48,15 @@ class FirstFragment : Fragment() {
 
         val dataSet: MutableList<String> = mutableListOf()
         val adapter = RecyclerViewAdapter(dataSet)
+        adapter.setOnClickListener {
+            // RecyclerView 内の TextView から ISBN を取得
+            val isbn = it.findViewById<TextView>(R.id.itemIsbnTextView).text.toString()
+            val book = Book(isbn)
+
+            // データを渡しつつ画面遷移
+            val action = FirstFragmentDirections.actionFirstFragmentToSecondFragment(book)
+            it.findNavController().navigate(action)
+        }
         binding.recyclerView.adapter = adapter
 
         // ISBN 生成ボタン
