@@ -7,7 +7,7 @@ interface IsbnGenerator {
      * @param isbnWithoutCheckDigit チェックデジットが付いていない ISBN の String
      * @return チェックデジット付きの ISBN の String
      */
-    fun calculateCheckDigit(isbnWithoutCheckDigit: String): String {
+    fun addCheckDigit(isbnWithoutCheckDigit: String): String {
         if (isbnWithoutCheckDigit.length != 12) {
             throw java.lang.IllegalArgumentException("isbnWithoutCheckDigit must be 12 characters")
         }
