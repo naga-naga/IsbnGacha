@@ -10,7 +10,9 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.room.Room
 import com.example.isbngacha.databinding.FragmentIsbnListBinding
+import kotlinx.coroutines.runBlocking
 
 /**
  * A simple [Fragment] subclass as the default destination in the navigation.
@@ -25,6 +27,11 @@ class FirstFragment : Fragment() {
     // onDestroyView.
     private val binding get() = _binding!!
 
+    companion object {
+        // AppDatabase オブジェクトは高コストなため，シングルトンにする必要があるらしい
+        lateinit var db: AppDatabase
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -38,6 +45,11 @@ class FirstFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        db = Room
+            .databaseBuilder(requireContext(), AppDatabase::class.java, "database")
+            .build()
+        val bookDao = db.bookDao()
+
         // 1列に並べる
         val layoutManager = LinearLayoutManager(context)
         binding.recyclerView.layoutManager = layoutManager
@@ -46,7 +58,11 @@ class FirstFragment : Fragment() {
         val decoration = DividerItemDecoration(context, layoutManager.orientation)
         binding.recyclerView.addItemDecoration(decoration)
 
-        val dataSet: MutableList<String> = mutableListOf()
+        var dataSet: MutableList<Book>
+        // DB へのアクセスはメインスレッドから行えないため，コルーチンを使用
+        runBlocking {
+            dataSet = bookDao.getAllBooks()
+        }
         val adapter = RecyclerViewAdapter(dataSet)
         adapter.setOnClickListener {
             // RecyclerView 内の TextView から ISBN を取得
@@ -60,10 +76,17 @@ class FirstFragment : Fragment() {
 
         // ISBN 生成ボタン
         binding.isbnGeneratorButton.setOnClickListener {
+            // ISBN 生成
             val isbnGenerator: IsbnGenerator = RandomIsbnGenerator()
             val isbn = isbnGenerator.generate()
+            val book = Book(isbn)
             Log.d(TAG, "ISBN generated: $isbn")
-            adapter.addData(isbn)
+            adapter.addData(book)
+
+            // DB に保存
+            runBlocking {
+                bookDao.insert(book)
+            }
         }
     }
 

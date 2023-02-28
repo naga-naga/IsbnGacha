@@ -7,7 +7,7 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 
-class RecyclerViewAdapter(private val dataSet: MutableList<String>) :
+class RecyclerViewAdapter(private val dataSet: MutableList<Book>) :
     RecyclerView.Adapter<RecyclerViewAdapter.ViewHolder>() {
 
     private lateinit var onClickListener: OnClickListener
@@ -29,7 +29,8 @@ class RecyclerViewAdapter(private val dataSet: MutableList<String>) :
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.textView.text = dataSet[position]
+        val isbn = dataSet[position].isbn
+        holder.textView.text = isbn
     }
 
     override fun getItemCount(): Int {
@@ -40,7 +41,7 @@ class RecyclerViewAdapter(private val dataSet: MutableList<String>) :
         onClickListener = listener
     }
 
-    fun addData(data: String) {
+    fun addData(data: Book) {
         dataSet.add(data)
         notifyItemInserted(dataSet.size - 1)
     }
