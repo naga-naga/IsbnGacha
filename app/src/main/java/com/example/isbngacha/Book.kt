@@ -16,9 +16,12 @@ data class Book(
     @ColumnInfo(name = "cover_url") var coverUrl: String?,
     var author: String?,
     @ColumnInfo(name = "cover_image") var coverImage: Bitmap?,
-    @ColumnInfo(name = "last_fetch_datetime") var lastFetchDatetime: String?,
+    @ColumnInfo(name = "last_fetch_unix_time") var lastFetchUnixTime: Long?,
 ) {
 
     constructor(isbn: String) :
-            this(isbn, "", "", "", "", "", "", "", null, "")
+            this(
+                isbn, null, null, null, null,
+                null, null, null, null, null
+            )
 }

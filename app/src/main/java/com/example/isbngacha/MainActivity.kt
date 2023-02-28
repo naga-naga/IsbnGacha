@@ -26,6 +26,7 @@ class MainActivity : AppCompatActivity() {
 
         db = Room
             .databaseBuilder(this, AppDatabase::class.java, "database")
+            .fallbackToDestructiveMigration() // DB のバージョンを上げる際，データを全部消してマイグレーションする
             .build()
 
         binding = ActivityMainBinding.inflate(layoutInflater)
