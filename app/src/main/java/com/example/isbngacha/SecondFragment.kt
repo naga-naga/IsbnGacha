@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.example.isbngacha.databinding.FragmentBookDetailBinding
+import kotlinx.coroutines.runBlocking
 
 /**
  * A simple [Fragment] subclass as the second destination in the navigation.
@@ -36,7 +37,13 @@ class SecondFragment : Fragment() {
 
         // データを受け取る
         val isbn = SecondFragmentArgs.fromBundle(requireArguments()).isbn
-        Log.d(TAG, "received: $isbn")
+
+        val bookDao = MainActivity.db.bookDao()
+        var book: Book
+        runBlocking {
+            book = bookDao.getBookWithIsbn(isbn)
+        }
+        Log.d(TAG, book.toString())
     }
 
     override fun onDestroyView() {

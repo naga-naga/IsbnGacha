@@ -8,6 +8,7 @@ import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
+import androidx.room.Room
 import com.example.isbngacha.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
@@ -15,8 +16,17 @@ class MainActivity : AppCompatActivity() {
     private lateinit var appBarConfiguration: AppBarConfiguration
     private lateinit var binding: ActivityMainBinding
 
+    companion object {
+        // AppDatabase オブジェクトは高コストなため，シングルトンにする必要があるらしい
+        lateinit var db: AppDatabase
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        db = Room
+            .databaseBuilder(this, AppDatabase::class.java, "database")
+            .build()
 
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
