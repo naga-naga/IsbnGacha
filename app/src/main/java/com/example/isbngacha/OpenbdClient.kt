@@ -5,7 +5,6 @@ import okhttp3.Callback
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.Response
-import org.json.JSONException
 import org.json.JSONObject
 
 class OpenbdClient {
@@ -38,26 +37,21 @@ class OpenbdClient {
                 rawResponseBodyString.substring(1..rawResponseBodyString.length - 2)
             Log.d(TAG, responseJsonString)
 
-            try {
-                val responseJson = JSONObject(responseJsonString)
-                val summaryJson = responseJson.getJSONObject("summary")
-                val isbn = summaryJson.getString("isbn")
-                val title = summaryJson.getString("title")
-                val volume = summaryJson.getString("volume")
-                val series = summaryJson.getString("series")
-                val publisher = summaryJson.getString("publisher")
-                val pubdate = summaryJson.getString("pubdate")
-                val coverUrl = summaryJson.getString("cover")
-                val author = summaryJson.getString("author")
-                val lastFetchUnixTime = System.currentTimeMillis()
+            val responseJson = JSONObject(responseJsonString)
+            val summaryJson = responseJson.getJSONObject("summary")
+            val isbn = summaryJson.getString("isbn")
+            val title = summaryJson.getString("title")
+            val volume = summaryJson.getString("volume")
+            val series = summaryJson.getString("series")
+            val publisher = summaryJson.getString("publisher")
+            val pubdate = summaryJson.getString("pubdate")
+            val coverUrl = summaryJson.getString("cover")
+            val author = summaryJson.getString("author")
 
-                book = Book(
-                    isbn, title, volume, series, publisher,
-                    pubdate, coverUrl, author, null, lastFetchUnixTime
-                )
-            } catch (e: JSONException) {
-                e.printStackTrace()
-            }
+            book = Book(
+                isbn, title, volume, series, publisher,
+                pubdate, coverUrl, author, null, null
+            )
         }
 
         return book

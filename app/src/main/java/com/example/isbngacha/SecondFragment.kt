@@ -46,7 +46,7 @@ class SecondFragment : Fragment() {
 
         // 書籍情報を取得する際のコールバック
         val client = OpenbdClient()
-        var bookInfoWithoutCoverImage: Book
+        var bookInfoWithoutCoverImage = Book(isbn)
         val bookInfoCallback = object : Callback {
             override fun onFailure(call: Call, e: IOException) {
                 e.printStackTrace()
@@ -54,7 +54,15 @@ class SecondFragment : Fragment() {
 
             override fun onResponse(call: Call, response: Response) {
                 // 書籍情報を取得する時のコールバック．書影は URL が返ってくるので，別に取得する．
-                bookInfoWithoutCoverImage = client.parseResponse(response)
+                bookInfoWithoutCoverImage.lastFetchUnixTime = System.currentTimeMillis()
+                try {
+                    bookInfoWithoutCoverImage = client.parseResponse(response)
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                    runBlocking {
+                        bookDao.update(bookInfoWithoutCoverImage)
+                    }
+                }
                 Log.d(TAG, bookInfoWithoutCoverImage.toString())
 
                 val coverUrl = bookInfoWithoutCoverImage.coverUrl
