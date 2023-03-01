@@ -55,13 +55,6 @@ class SecondFragment : Fragment() {
             override fun onResponse(call: Call, response: Response) {
                 // 書籍情報を取得する時のコールバック．書影は URL が返ってくるので，別に取得する．
                 bookInfoWithoutCoverImage = client.parseResponse(response)
-                activity?.runOnUiThread {
-                    binding.isbnTextView.text = isbn
-                    binding.titleTextView.text = bookInfoWithoutCoverImage.title
-                    binding.authorTextView.text = bookInfoWithoutCoverImage.author
-                    binding.publisherTextView.text = bookInfoWithoutCoverImage.publisher
-                    binding.pubdateTextView.text = bookInfoWithoutCoverImage.pubdate
-                }
                 Log.d(TAG, bookInfoWithoutCoverImage.toString())
 
                 val coverUrl = bookInfoWithoutCoverImage.coverUrl
@@ -74,13 +67,14 @@ class SecondFragment : Fragment() {
                         // 書影を取得する時のコールバック
                         val bitmap =
                             BitmapFactory.decodeStream(response.body!!.byteStream(), null, null)
+                        val book = bookInfoWithoutCoverImage.copy()
+                        book.coverImage = bitmap
+
                         activity?.runOnUiThread {
-                            binding.bookImage.setImageBitmap(bitmap)
+                            updateDetailView(book)
                         }
 
                         // DB に保存
-                        val book = bookInfoWithoutCoverImage.copy()
-                        book.coverImage = bitmap
                         runBlocking {
                             bookDao.update(book)
                         }
@@ -99,17 +93,21 @@ class SecondFragment : Fragment() {
         if (book.lastFetchUnixTime == null) {
             client.fetchBookInfo(isbn, bookInfoCallback)
         } else {
-            binding.isbnTextView.text = book.isbn
-            binding.titleTextView.text = book.title
-            binding.authorTextView.text = book.author
-            binding.publisherTextView.text = book.publisher
-            binding.pubdateTextView.text = book.pubdate
-            binding.bookImage.setImageBitmap(book.coverImage)
+            updateDetailView(book)
         }
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+
+    private fun updateDetailView(book: Book) {
+        binding.isbnTextView.text = book.isbn
+        binding.titleTextView.text = book.title
+        binding.authorTextView.text = book.author
+        binding.publisherTextView.text = book.publisher
+        binding.pubdateTextView.text = book.pubdate
+        binding.bookImage.setImageBitmap(book.coverImage)
     }
 }
