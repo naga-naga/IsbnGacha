@@ -13,6 +13,9 @@ interface BookDao {
     @Delete
     suspend fun delete(book: Book)
 
+    @Query("DELETE FROM books WHERE isbn = :isbn")
+    suspend fun deleteWithIsbn(isbn: String)
+
     @Query("SELECT * FROM books")
     suspend fun getAllBooks(): MutableList<Book>
 

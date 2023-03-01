@@ -1,5 +1,6 @@
 package com.example.isbngacha
 
+import android.app.AlertDialog
 import android.graphics.BitmapFactory
 import android.os.Bundle
 import android.util.Log
@@ -7,6 +8,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import com.example.isbngacha.databinding.FragmentBookDetailBinding
 import kotlinx.coroutines.runBlocking
 import okhttp3.Call
@@ -58,9 +60,13 @@ class SecondFragment : Fragment() {
                 try {
                     bookInfoWithoutCoverImage = client.parseResponse(response)
                 } catch (e: Exception) {
+                    // 書籍情報が見つからなかった場合
                     e.printStackTrace()
                     runBlocking {
                         bookDao.update(bookInfoWithoutCoverImage)
+                    }
+                    activity?.runOnUiThread {
+                        popupAlertDialog(isbn)
                     }
                 }
                 Log.d(TAG, bookInfoWithoutCoverImage.toString())
@@ -111,11 +117,29 @@ class SecondFragment : Fragment() {
     }
 
     private fun updateDetailView(book: Book) {
+        if (book.title == null) {
+            popupAlertDialog(book.isbn)
+            return
+        }
+
         binding.isbnTextView.text = book.isbn
         binding.titleTextView.text = book.title
         binding.authorTextView.text = book.author
         binding.publisherTextView.text = book.publisher
         binding.pubdateTextView.text = book.pubdate
         binding.bookImage.setImageBitmap(book.coverImage)
+    }
+
+    private fun popupAlertDialog(isbn: String) {
+        AlertDialog.Builder(activity)
+            .setMessage("書籍情報が見つかりませんでした")
+            .setPositiveButton("削除") { _, _ ->
+                val bookDao = MainActivity.db.bookDao()
+                runBlocking {
+                    bookDao.deleteWithIsbn(isbn)
+                }
+                findNavController().popBackStack()
+            }
+            .show()
     }
 }
