@@ -56,12 +56,13 @@ class SecondFragment : Fragment() {
 
             override fun onResponse(call: Call, response: Response) {
                 // 書籍情報を取得する時のコールバック．書影は URL が返ってくるので，別に取得する．
-                bookInfoWithoutCoverImage.lastFetchUnixTime = System.currentTimeMillis()
                 try {
                     bookInfoWithoutCoverImage = client.parseResponse(response)
+                    bookInfoWithoutCoverImage.lastFetchUnixTime = System.currentTimeMillis()
                 } catch (e: Exception) {
                     // 書籍情報が見つからなかった場合
                     e.printStackTrace()
+                    bookInfoWithoutCoverImage.lastFetchUnixTime = System.currentTimeMillis()
                     runBlocking {
                         bookDao.update(bookInfoWithoutCoverImage)
                     }
