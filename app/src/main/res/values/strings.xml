@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">IsbnGacha</string>
+    <string name="app_name">ISBNガチャ</string>
     <string name="action_settings">Settings</string>
     <!-- Strings used for fragments for navigation -->
     <string name="generate">生成する</string>
