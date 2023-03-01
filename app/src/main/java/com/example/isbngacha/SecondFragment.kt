@@ -39,11 +39,12 @@ class SecondFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        val bookDao = MainActivity.db.bookDao()
 
         // isbn を受け取る
         val isbn = SecondFragmentArgs.fromBundle(requireArguments()).isbn
 
-        // 書籍情報を取得
+        // 書籍情報を取得する際のコールバック
         val client = OpenbdClient()
         var bookInfoWithoutCoverImage: Book
         val bookInfoCallback = object : Callback {
@@ -78,7 +79,6 @@ class SecondFragment : Fragment() {
                         }
 
                         // DB に保存
-                        val bookDao = MainActivity.db.bookDao()
                         val book = bookInfoWithoutCoverImage.copy()
                         book.coverImage = bitmap
                         runBlocking {
@@ -89,7 +89,23 @@ class SecondFragment : Fragment() {
                 client.fetchCoverImage(coverUrl, coverImageCallback)
             }
         }
-        client.fetchBookInfo(isbn, bookInfoCallback)
+
+        // 取得済みの場合は DB から読み出す
+        var book: Book
+        runBlocking {
+            book = bookDao.getBookWithIsbn(isbn)
+        }
+
+        if (book.lastFetchUnixTime == null) {
+            client.fetchBookInfo(isbn, bookInfoCallback)
+        } else {
+            binding.isbnTextView.text = book.isbn
+            binding.titleTextView.text = book.title
+            binding.authorTextView.text = book.author
+            binding.publisherTextView.text = book.publisher
+            binding.pubdateTextView.text = book.pubdate
+            binding.bookImage.setImageBitmap(book.coverImage)
+        }
     }
 
     override fun onDestroyView() {
