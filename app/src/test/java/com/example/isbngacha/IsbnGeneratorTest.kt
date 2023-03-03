@@ -56,7 +56,7 @@ class IsbnGeneratorTest {
     @Test
     fun 桁数が正しくないとき3() {
         val generator: IsbnGenerator = RandomIsbnGenerator()
-        assertThrows(java.lang.IllegalArgumentException::class.java) {
+        assertThrows(IllegalArgumentException::class.java) {
             generator.addCheckDigit("1234567890123") // 13桁
         }
     }
@@ -64,7 +64,7 @@ class IsbnGeneratorTest {
     @Test
     fun 桁数が正しくないとき4() {
         val generator: IsbnGenerator = RandomIsbnGenerator()
-        assertThrows(java.lang.IllegalArgumentException::class.java) {
+        assertThrows(IllegalArgumentException::class.java) {
             generator.addCheckDigit("12345678901") // 11桁
         }
     }

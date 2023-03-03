@@ -9,7 +9,7 @@ interface IsbnGenerator {
      */
     fun addCheckDigit(isbnWithoutCheckDigit: String): String {
         if (isbnWithoutCheckDigit.length != 12) {
-            throw java.lang.IllegalArgumentException("isbnWithoutCheckDigit must be 12 characters")
+            throw IllegalArgumentException("isbnWithoutCheckDigit must be 12 characters")
         }
 
         // --- チェックデジットの求め方 ---
