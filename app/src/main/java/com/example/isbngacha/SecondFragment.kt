@@ -123,11 +123,13 @@ class SecondFragment : Fragment() {
             return
         }
 
+        val pubdate = addSlashToPubdate(book.pubdate)
+
         binding.isbnTextView.text = book.isbn
         binding.titleTextView.text = book.title
         binding.authorTextView.text = book.author
         binding.publisherTextView.text = book.publisher
-        binding.pubdateTextView.text = book.pubdate
+        binding.pubdateTextView.text = pubdate
         binding.bookImage.setImageBitmap(book.coverImage)
     }
 
@@ -142,5 +144,19 @@ class SecondFragment : Fragment() {
                 findNavController().popBackStack()
             }
             .show()
+    }
+
+    /**
+     * YYYYMMDD -> YYYY/MM/DD にする
+     */
+    private fun addSlashToPubdate(pubdate: String?): String {
+        if (pubdate?.length != 8) {
+            throw IllegalArgumentException("pubdate must be 8 characters.")
+        }
+
+        val year = pubdate.substring(0..3)
+        val month = pubdate.substring(4..5)
+        val day = pubdate.substring(6..7)
+        return "$year/$month/$day"
     }
 }
