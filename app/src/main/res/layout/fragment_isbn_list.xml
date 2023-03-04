@@ -10,7 +10,6 @@
         android:id="@+id/recyclerView"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:background="#DCDCDC"
         android:fadeScrollbars="false"
         android:scrollbars="vertical"
         app:layout_constraintBottom_toTopOf="@+id/oneIsbnGeneratorButton"
