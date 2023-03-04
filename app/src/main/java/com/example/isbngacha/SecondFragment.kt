@@ -148,10 +148,11 @@ class SecondFragment : Fragment() {
 
     /**
      * YYYYMMDD -> YYYY/MM/DD にする
+     * YYYYMMDD の形式でない場合はそのまま返す
      */
     private fun addSlashToPubdate(pubdate: String?): String {
         if (pubdate?.length != 8) {
-            throw IllegalArgumentException("pubdate must be 8 characters.")
+            return pubdate ?: ""
         }
 
         val year = pubdate.substring(0..3)
