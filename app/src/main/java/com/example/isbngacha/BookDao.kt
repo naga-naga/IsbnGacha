@@ -7,6 +7,9 @@ interface BookDao {
     @Insert
     suspend fun insert(book: Book)
 
+    @Insert
+    suspend fun insert(books: MutableList<Book>)
+
     @Update
     suspend fun update(book: Book)
 

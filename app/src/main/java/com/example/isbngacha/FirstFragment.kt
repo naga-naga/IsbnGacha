@@ -26,6 +26,8 @@ class FirstFragment : Fragment() {
     // onDestroyView.
     private val binding get() = _binding!!
 
+    private lateinit var isbnGenerator: IsbnGenerator
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -64,10 +66,11 @@ class FirstFragment : Fragment() {
         }
         binding.recyclerView.adapter = adapter
 
-        // ISBN 生成ボタン
-        binding.isbnGeneratorButton.setOnClickListener {
-            // ISBN 生成
-            val isbnGenerator: IsbnGenerator = RandomIsbnGenerator()
+        // ISBN 生成
+        isbnGenerator = RandomIsbnGenerator()
+
+        // 単発
+        binding.oneIsbnGeneratorButton.setOnClickListener {
             val isbn = isbnGenerator.generate()
             val book = Book(isbn)
             Log.d(TAG, "ISBN generated: $isbn")
@@ -76,6 +79,22 @@ class FirstFragment : Fragment() {
             // DB に保存
             runBlocking {
                 bookDao.insert(book)
+            }
+        }
+
+        // 10回
+        binding.tenIsbnsGeneratorButton.setOnClickListener {
+            val bookList: MutableList<Book> = mutableListOf()
+            for (i in 0..9) {
+                val isbn = isbnGenerator.generate()
+                val book = Book(isbn)
+                Log.d(TAG, "ISBN generated: $isbn")
+                adapter.addData(book)
+                bookList.add(book)
+            }
+
+            runBlocking {
+                bookDao.insert(bookList)
             }
         }
     }
